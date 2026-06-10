@@ -322,8 +322,7 @@ return show("Please pay doctor fee ₹200 before booking appointment");
 
 const timeStr=`${draft.hour}:${draft.minute} ${draft.ampm}`;
 
-fetch("http://localhost:5000/api/appointment",{
-
+fetch("/api/appointment",{
 method:"POST",
 headers:{ "Content-Type":"application/json" },
 
