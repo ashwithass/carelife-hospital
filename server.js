@@ -367,7 +367,11 @@ app.get("/api/report/chats", async (req,res)=>{
     }
 });
 
+app.use(express.static(__dirname));
 
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
 /* ================= SERVER ================= */
 
 app.listen(5000, ()=>{
