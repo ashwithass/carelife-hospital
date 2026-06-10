@@ -1,0 +1,144 @@
+/* ===== REMOVE PAGE SCROLLBAR COMPLETELY ===== */
+
+/* Chrome, Edge, Safari */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar{
+    display:none;
+}
+
+/* Firefox */
+html, body{
+    scrollbar-width:none;
+}
+
+/* IE / old Edge */
+html, body{
+    -ms-overflow-style:none;
+}
+
+/* ✅ FIX: Proper height so layout doesn't collapse on first paint */
+html, body{
+    height:100%;
+}
+
+/* ================= CHATBOT STYLES ================= */
+
+/* Chatbot bubble polish + animation */
+
+.bot-msg, .user-msg {
+    max-width: 78%;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    animation: fadeSlide .25s ease;
+}
+
+@keyframes fadeSlide {
+    from { opacity:0; transform:translateY(5px); }
+    to { opacity:1; transform:translateY(0); }
+}
+
+.bot-msg::before { content: "🤖 "; }
+.user-msg::before { content: attr(data-user) " "; font-weight:bold; }
+
+/* Chatbot bigger size */
+.chat-container{
+    width:380px !important;
+    height:520px !important;
+}
+
+.chat-body{
+    height:390px !important;
+    overflow-y:auto;
+}
+
+/* Thin dark blue scrollbar ONLY inside chatbot */
+.chat-body::-webkit-scrollbar{
+    width:6px;
+}
+.chat-body::-webkit-scrollbar-thumb{
+    background:#0d47a1;
+    border-radius:10px;
+}
+.chat-body{
+    scrollbar-width:thin;
+    scrollbar-color:#0d47a1 transparent;
+}
+
+/* Options */
+.option-box {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.option-box button {
+    padding:8px 12px;
+    border-radius:10px;
+    border:1px solid #1976d2;
+    background:#e3f2fd;
+    font-size:14px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.option-box button:hover {
+    background:#1976d2;
+    color:#fff;
+}
+
+.action-buttons {
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.book-btn {
+    flex:1;
+    padding:8px;
+    border-radius:8px;
+    border:none;
+    background:#1976d2;
+    color:#fff;
+    cursor:pointer;
+}
+
+.exit-btn {
+    flex:1;
+    padding:8px;
+    border-radius:8px;
+    border:none;
+    background:#ccc;
+    cursor:pointer;
+}
+
+/* Logout box */
+.logout-box{
+    display:none;
+    position:absolute;
+    top:48px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.2);
+    padding:6px 10px;
+    z-index:100;
+    text-align:center;
+}
+
+.logout-btn{
+    background:none;
+    border:none;
+    padding:6px 10px;
+    font-size:14px;
+    cursor:pointer;
+    color:#1976d2;
+}
+
+/* ✅ FIX: Hero gets full height immediately (prevents grey flash) */
+.hero{
+    min-height:100vh;
+}

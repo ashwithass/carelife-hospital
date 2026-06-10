@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Patient History | CareLife</title>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- ✅ REQUIRED FOR PROPER PDF TEXT (Price, symbols, spacing) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/fonts/Roboto-Regular-normal.js"></script>
+
+<link rel="stylesheet" href="patient.css">
+</head>
+
+<body>
+
+<script>
+if(localStorage.getItem("role") !== "patient"){
+    location.href = "index.html";
+}
+</script>
+
+<header class="header">
+    <div class="left-group">
+        <div class="back-arrow" onclick="history.back()">←</div>
+
+        <div class="logo">
+            <img src="hospital.png" alt="CareLife Logo">
+            CareLife
+        </div>
+    </div>
+    <button class="nav-btn" onclick="logout()">Logout</button>
+</header>
+
+<div class="container" id="content"></div>
+
+<!-- Prescription Modal -->
+<div class="modal" id="modal">
+    <div class="modal-box" id="modalContent"></div>
+</div>
+
+<!-- Chat box -->
+<div id="chatBox" class="chat-box">
+    <div class="chat-header">
+        <span>Doctor Chat</span>
+        <span onclick="closeChat()">✖</span>
+    </div>
+    <div id="chatMessages" class="chat-messages"></div>
+    <div class="chat-input">
+        <input id="chatInput" placeholder="Reply to doctor...">
+        <button onclick="sendReply()">Send</button>
+    </div>
+</div>
+
+<!-- Patient JS -->
+<script src="patient.js" defer></script>
+
+</body>
+</html>

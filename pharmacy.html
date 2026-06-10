@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pharmacy | CareLife</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Arial,sans-serif;}
+body{
+    background:linear-gradient(135deg,#e8f2ff,#ffffff);
+    color:#333;
+    animation:fadeIn .6s ease;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+}
+@keyframes slideUp{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 40px;
+    background:#fff;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+/* ✅ Logo */
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:22px;
+    font-weight:700;
+    color:#1976d2;
+}
+.logo img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #1976d2;
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+/* ✅ Back button inside header */
+.back-btn{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:50%;
+    background:#1976d2;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:.2s;
+}
+.back-btn:hover{
+    background:#125ea8;
+    transform:translateX(-3px);
+}
+
+.nav-btn{
+    padding:10px 18px;
+    border-radius:22px;
+    border:none;
+    background:#1976d2;
+    color:#fff;
+    cursor:pointer;
+    transition:.25s;
+}
+.nav-btn:hover{transform:scale(1.05);background:#125ea8}
+
+/* LAYOUT */
+.container{
+    max-width:1000px;
+    margin:120px auto 40px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+.box{
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+    animation:slideUp .5s ease;
+}
+
+h2{color:#1976d2;margin-bottom:18px;}
+
+/* PRESCRIPTION */
+.prescription-box{
+    background:#f4f7ff;
+    padding:20px;
+    border-radius:12px;
+}
+
+.med-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:white;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+    animation:slideUp .4s ease;
+}
+.med-item button{
+    background:#1976d2;
+    color:white;
+    border:none;
+    padding:6px 14px;
+    border-radius:18px;
+    cursor:pointer;
+    transition:.2s;
+}
+.med-item button:hover{background:#125ea8}
+
+/* CART */
+.cart{margin-top:20px;}
+.empty{color:#777;font-style:italic;}
+
+.proceed-btn{
+    margin-top:15px;
+    padding:12px 26px;
+    border-radius:26px;
+    border:none;
+    background:#2e7d32;
+    color:white;
+    cursor:pointer;
+    display:none;
+    transition:.25s;
+}
+.proceed-btn:hover{transform:scale(1.05);background:#1b5e20}
+
+.success-box{
+    background:#eef9ee;
+    padding:18px;
+    border-radius:12px;
+    color:#2e7d32;
+    font-weight:600;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div style="display:flex;align-items:center;gap:14px">
+        <button class="back-btn" onclick="goHome()">←</button>
+
+        <div class="logo">
+            <img src="hospital.png" alt="CareLife Logo">
+            CareLife Pharmacy
+        </div>
+    </div>
+
+    <button class="nav-btn" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+    <!-- PRESCRIPTION -->
+    <div class="box">
+        <h2>Your Prescription</h2>
+        <div id="prescriptionBox" class="prescription-box"></div>
+
+        <div class="cart">
+            <h3>Cart</h3>
+            <div id="cartBox" class="empty">No medicines added</div>
+            <button id="proceedBtn" class="proceed-btn" onclick="placeOrder()">
+                Proceed to Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- ORDER HISTORY -->
+    <div class="box">
+        <h2>Order History</h2>
+        <div id="historyBox" class="empty">No orders yet</div>
+    </div>
+
+</div>
+
+<script>
+const pid = localStorage.getItem("currentUser");
+const prescriptionBox = document.getElementById("prescriptionBox");
+const cartBox = document.getElementById("cartBox");
+const proceedBtn = document.getElementById("proceedBtn");
+const historyBox = document.getElementById("historyBox");
+
+let prescriptions = [];
+let cart = [];
+
+/* LOAD PRESCRIPTIONS */
+loadPrescriptions();
+
+function loadPrescriptions(){
+    fetch("http://localhost:5000/api/prescriptions")
+    .then(res => res.json())
+    .then(data => {
+
+        prescriptions = data.filter(p => 
+            p.pid === pid && !p.used
+        );
+
+        if(prescriptions.length === 0){
+            prescriptionBox.innerHTML =
+                "<p class='empty'>No prescription available</p>";
+            cart = [];
+            renderCart();
+            return;
+        }
+
+        prescriptionBox.innerHTML = "";
+        prescriptions.forEach((p, i)=>{
+            prescriptionBox.innerHTML += `
+                <div class="med-item">
+                    <span>
+                        <b>${p.medicine || "-"}</b><br>
+                        <small>Qty: ${p.qty || "-"}</small><br>
+                        <small style="color:#1976d2;font-weight:600">
+                            Price: ₹${p.price || "0"} (including doctor fee)
+                        </small>
+                    </span>
+                    <button onclick="addToCart(${i})">Add</button>
+                </div>
+            `;
+        });
+    });
+}
+
+/* CART */
+function addToCart(index){
+    cart.push({
+        name: prescriptions[index].medicine,
+        price: prescriptions[index].price,
+        id: prescriptions[index]._id
+    });
+    renderCart();
+}
+
+function renderCart(){
+    if(cart.length === 0){
+        cartBox.innerHTML = "No medicines added";
+        proceedBtn.style.display = "none";
+        return;
+    }
+    cartBox.innerHTML = cart.map((c,i)=>`${i+1}. ${c.name} - ₹${c.price}`).join("<br>");
+    proceedBtn.style.display = "inline-block";
+}
+
+function placeOrder(){
+    if(cart.length === 0){
+        alert("Cart is empty");
+        return;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("presIds", JSON.stringify(cart.map(c=>c.id)));
+    window.location.href = "payment.html";
+}
+
+/* ORDER HISTORY */
+function loadOrders(){
+    fetch("http://localhost:5000/api/orders/" + pid)
+    .then(res => res.json())
+    .then(orders => {
+        if(orders.length === 0){
+            historyBox.innerHTML = "<p class='empty'>No orders yet</p>";
+            return;
+        }
+        historyBox.innerHTML = "";
+        orders.forEach((o,i)=>{
+            historyBox.innerHTML += `
+                <div class="success-box">
+                    <b>Order #${i+1}</b><br>
+                    Date: ${o.date}<br>
+                    Status: <b>${o.status}</b><br>
+                    Medicines: ${o.items.join(", ")}
+                </div>
+            `;
+        });
+    });
+}
+loadOrders();
+
+/* NAV */
+function goHome(){ window.location.href="index.html"; }
+function logout(){
+    localStorage.clear();
+    window.location.href="index.html";
+}
+</script>
+
+</body>
+</html>

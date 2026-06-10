@@ -1,0 +1,389 @@
+*{
+box-sizing:border-box;
+font-family:"Segoe UI",sans-serif;
+}
+
+body{
+margin:0;
+background:#f4f8ff;
+color:#333;
+}
+
+
+/* ================= HEADER ================= */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 40px;
+background:#fff;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+position:relative;
+z-index:5;
+}
+
+.left-group{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+color:#1976d2;
+}
+
+.back-arrow{
+width:38px;
+height:38px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#1976d2;
+color:#fff;
+cursor:pointer;
+transition:.3s;
+}
+
+.back-arrow:hover{
+transform:translateX(-4px);
+}
+
+
+/* ================= PAGE CONTAINER ================= */
+
+.container{
+max-width:900px;
+margin:60px auto;
+padding:0 20px;
+}
+
+
+/* ================= APPOINTMENT CARD ================= */
+
+.card{
+background:#fff;
+padding:28px;
+margin-bottom:26px;
+border-radius:32px;
+box-shadow:0 18px 40px rgba(0,0,0,.14);
+transition:.35s ease;
+}
+
+.card:hover{
+transform:translateY(-4px);
+}
+
+.card.done{
+opacity:.45;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.nav-btn{
+padding:10px 18px;
+border-radius:24px;
+border:none;
+background:#1976d2;
+color:#fff;
+cursor:pointer;
+transition:.3s;
+}
+
+.nav-btn.outline{
+background:#fff;
+color:#1976d2;
+border:2px solid #1976d2;
+}
+
+.nav-btn.blue{
+background:#1976d2;
+color:#fff;
+}
+
+.nav-btn:hover{
+transform:scale(1.05);
+}
+
+.btn-row{
+display:flex;
+gap:12px;
+margin-top:14px;
+}
+
+
+/* ================= MODAL ================= */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.35);
+backdrop-filter:blur(5px);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+opacity:0;
+pointer-events:none;
+
+transition:opacity .3s ease;
+
+z-index:20;
+}
+
+.modal.show{
+opacity:1;
+pointer-events:auto;
+}
+
+
+/* ================= MODAL BOX ================= */
+
+.modal-box{
+background:#fff;
+width:520px;
+max-height:82vh;
+overflow-y:auto;
+padding:32px;
+border-radius:30px;
+
+transform:scale(.96);
+opacity:0;
+transition:.3s ease;
+
+scrollbar-width:none;
+-ms-overflow-style:none;
+
+position:relative;
+}
+
+.modal-box::-webkit-scrollbar{
+display:none;
+}
+
+.modal.show .modal-box{
+transform:scale(1);
+opacity:1;
+}
+
+
+/* ================= INPUTS ================= */
+
+.modal-box input,
+.modal-box textarea,
+.modal-box select{
+
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:14px;
+border:1px solid #e3e8f0;
+outline:none;
+
+transition:.2s;
+}
+
+.modal-box input:focus,
+.modal-box textarea:focus,
+.modal-box select:focus{
+border-color:#1976d2;
+box-shadow:0 0 0 2px rgba(25,118,210,.12);
+}
+
+.modal-box input:disabled,
+.modal-box textarea:disabled{
+background:#f1f1f1;
+cursor:not-allowed;
+}
+
+
+/* ================= TOGGLE ================= */
+
+.toggle{
+display:flex;
+align-items:center;
+gap:10px;
+margin:14px 0;
+}
+
+.switch{
+width:36px;
+height:18px;
+position:relative;
+}
+
+.switch input{
+opacity:0;
+}
+
+.slider{
+position:absolute;
+inset:0;
+background:#ccc;
+border-radius:18px;
+cursor:pointer;
+transition:.3s;
+}
+
+.slider:before{
+content:"";
+position:absolute;
+width:14px;
+height:14px;
+background:#fff;
+border-radius:50%;
+left:2px;
+top:2px;
+transition:.3s;
+}
+
+.switch input:checked + .slider{
+background:#1976d2;
+}
+
+.switch input:checked + .slider:before{
+transform:translateX(18px);
+}
+
+
+/* ================= AUTO MEDICINE LIST ================= */
+
+.auto-list{
+margin-top:8px;
+margin-bottom:10px;
+border-radius:14px;
+border:1px solid #e3e8f0;
+background:#ffffff;
+overflow:hidden;
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
+
+.auto-item{
+padding:10px 14px;
+cursor:pointer;
+transition:all .2s ease;
+}
+
+.auto-item:not(:last-child){
+border-bottom:1px solid #eef2f7;
+}
+
+.auto-item b{
+color:#1976d2;
+font-size:14px;
+}
+
+.auto-item small{
+color:#666;
+font-size:12px;
+}
+
+.auto-item:hover{
+background:#f5f9ff;
+transform:translateX(4px);
+}
+
+
+/* ================= CHAT CARD ================= */
+
+.chat-card{
+position:absolute;
+right:20px;
+bottom:20px;
+width:320px;
+background:#ffffff;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.18);
+display:none;
+flex-direction:column;
+overflow:hidden;
+z-index:50;
+animation:pop .25s ease;
+}
+
+@keyframes pop{
+from{transform:scale(.8);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+.chat-header{
+background:#1976d2;
+color:#fff;
+padding:10px 14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-weight:600;
+}
+
+.chat-close{
+cursor:pointer;
+}
+
+.chat-body{
+padding:10px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.chat-actions{
+display:flex;
+gap:6px;
+}
+
+.chat-actions button{
+flex:1;
+border:none;
+padding:6px;
+border-radius:10px;
+background:#e3f2fd;
+cursor:pointer;
+font-size:12px;
+}
+
+.chat-messages{
+height:160px;
+overflow:auto;
+background:#f7f9fc;
+border-radius:10px;
+padding:8px;
+font-size:12px;
+}
+
+.chat-input-row{
+display:flex;
+gap:6px;
+}
+
+.chat-input-row input{
+flex:1;
+padding:6px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.chat-input-row button{
+padding:6px 10px;
+border:none;
+border-radius:8px;
+background:#1976d2;
+color:#fff;
+cursor:pointer;
+}
+
+.doc-msg{
+color:#1976d2;
+font-weight:600;
+margin-bottom:4px;
+}
+
+.pat-msg{
+color:#444;
+margin-bottom:4px;
+}

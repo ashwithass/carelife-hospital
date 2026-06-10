@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | Smart Hospital</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="paper-container">
+
+<!-- BACK BUTTON -->
+<button class="back-btn" onclick="goBack()">←</button>
+
+<div class="image-circle">
+<img src="https://cdn-icons-png.flaticon.com/512/387/387561.png">
+</div>
+
+<div class="form-box">
+
+<!-- TOGGLE -->
+<div class="toggle-buttons">
+<button class="active" onclick="showPatientLogin()">Patient</button>
+<button onclick="showDoctor()">Doctor</button>
+</div>
+
+
+<!-- ================= PATIENT LOGIN ================= -->
+<div id="patientLogin" class="form active-form">
+
+<h2>Patient Login</h2>
+
+<input id="loginPid" placeholder="Patient ID">
+<input id="loginPass" type="password" placeholder="Password">
+
+<button class="form-btn" onclick="patientLogin()">Login</button>
+
+<p id="loginMsg" class="switch-text"></p>
+
+<p class="switch-text">
+New user? <span onclick="showPatientSignup()">Sign up</span>
+</p>
+
+</div>
+
+
+
+<!-- ================= PATIENT SIGNUP ================= -->
+<div id="patientSignup" class="form">
+
+<h2>Patient Registration</h2>
+
+<input id="regName" placeholder="Full Name">
+<input id="regEmail" type="email" placeholder="Email">
+<input id="regPhone" placeholder="Phone Number">
+<input id="regPass" type="password" placeholder="New Password">
+<input id="regCpass" type="password" placeholder="Confirm Password">
+
+<button class="form-btn" onclick="patientSignup()">Register</button>
+
+<p id="signupMsg" class="switch-text"></p>
+
+<p class="switch-text">
+Already registered?
+<span onclick="showPatientLogin()">Login</span>
+</p>
+
+</div>
+
+
+
+<!-- ================= DOCTOR LOGIN ================= -->
+<div id="doctorForm" class="form">
+
+<h2>Doctor Login</h2>
+
+<input id="docId" placeholder="Doctor ID">
+<input id="docPass" type="password" placeholder="Password">
+
+<button class="form-btn" onclick="doctorLogin()">Login</button>
+
+<p id="docMsg" class="switch-text"></p>
+
+</div>
+
+</div>
+</div>
+
+
+
+<script>
+
+/* ================= BACK BUTTON ================= */
+
+function goBack(){
+location.href="index.html";
+}
+
+
+/* ================= TOGGLE FORMS ================= */
+
+const patientLoginDiv=document.getElementById("patientLogin");
+const patientSignupDiv=document.getElementById("patientSignup");
+const doctorForm=document.getElementById("doctorForm");
+const toggleBtns=document.querySelectorAll(".toggle-buttons button");
+
+function hideAll(){
+document.querySelectorAll(".form").forEach(f=>f.classList.remove("active-form"));
+toggleBtns.forEach(b=>b.classList.remove("active"));
+}
+
+function showPatientLogin(){
+hideAll();
+patientLoginDiv.classList.add("active-form");
+toggleBtns[0].classList.add("active");
+}
+
+function showPatientSignup(){
+hideAll();
+patientSignupDiv.classList.add("active-form");
+toggleBtns[0].classList.add("active");
+}
+
+function showDoctor(){
+hideAll();
+doctorForm.classList.add("active-form");
+toggleBtns[1].classList.add("active");
+}
+
+
+/* ================= PATIENT SIGNUP ================= */
+
+function generatePatientId(){
+return "PAT"+Math.floor(10000+Math.random()*90000);
+}
+
+function patientSignup(){
+
+const name=document.getElementById("regName").value.trim();
+const email=document.getElementById("regEmail").value.trim();
+const phone=document.getElementById("regPhone").value.trim();
+const pass=document.getElementById("regPass").value;
+const cpass=document.getElementById("regCpass").value;
+
+const msg=document.getElementById("signupMsg");
+
+if(!name || !email || !phone || !pass || !cpass){
+msg.innerText="Fill all fields";
+msg.style.color="red";
+return;
+}
+
+if(pass!==cpass){
+msg.innerText="Passwords do not match";
+msg.style.color="red";
+return;
+}
+
+const pid=generatePatientId();
+
+fetch("http://localhost:5000/api/signup",{
+
+method:"POST",
+
+headers:{ "Content-Type":"application/json" },
+
+body:JSON.stringify({
+pid:pid,
+name:name,
+email:email,
+phone:phone,
+password:pass
+})
+
+})
+
+.then(()=>{
+
+msg.style.color="green";
+msg.innerHTML=`Registered successfully!<br><b>Your Patient ID: ${pid}</b>`;
+
+})
+
+.catch(()=>{
+
+msg.style.color="red";
+msg.innerText="Registration failed";
+
+});
+
+}
+
+
+
+/* ================= PATIENT LOGIN ================= */
+
+function patientLogin(){
+
+const pid=document.getElementById("loginPid").value;
+const pass=document.getElementById("loginPass").value;
+
+fetch("http://localhost:5000/api/login",{
+
+method:"POST",
+
+headers:{ "Content-Type":"application/json" },
+
+body:JSON.stringify({
+pid:pid,
+password:pass
+})
+
+})
+
+.then(res=>{
+
+if(!res.ok) throw "";
+
+localStorage.setItem("currentUser",pid);
+localStorage.setItem("role","patient");
+
+/* OPEN PATIENT DASHBOARD */
+window.location.href="index.html";
+
+})
+
+.catch(()=>{
+
+const msg=document.getElementById("loginMsg");
+msg.innerText="Invalid Patient ID or Password";
+msg.style.color="red";
+
+});
+
+}
+
+
+
+/* ================= DOCTOR LOGIN ================= */
+
+function doctorLogin(){
+
+const id=document.getElementById("docId").value.trim();
+const pass=document.getElementById("docPass").value.trim();
+
+if(id==="DCL001" && pass==="doctor"){
+
+localStorage.setItem("role","doctor");
+
+const msg=document.getElementById("docMsg");
+msg.innerText="Login successful";
+msg.style.color="green";
+
+/* OPEN DOCTOR DASHBOARD */
+
+setTimeout(()=>{
+window.location.href="doctor.html";
+},800);
+
+}
+else{
+
+const msg=document.getElementById("docMsg");
+msg.innerText="Invalid Doctor ID or Password";
+msg.style.color="red";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
+```

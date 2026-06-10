@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Doctor History | CareLife</title>
+
+<link rel="stylesheet" href="doctor.css">
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+
+.logo{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:22px;
+font-weight:700;
+color:#1976d2;
+}
+
+.logo img{
+width:42px;
+height:42px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid #1976d2;
+box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+.duration{
+width:100%;
+padding:10px;
+margin-top:8px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<script>
+if(localStorage.getItem("role")!=="doctor"){
+location.href="history.html";
+}
+</script>
+
+
+<!-- HEADER -->
+
+<header class="header">
+
+<div class="left-group">
+
+<div class="back-arrow" onclick="history.back()">←</div>
+
+<div class="logo">
+<img src="hospital.png">
+CareLife
+</div>
+
+</div>
+
+<div class="btn-row">
+<button class="nav-btn blue" onclick="clearHistory()">Clear History</button>
+<button class="nav-btn outline" onclick="logout()">Logout</button>
+</div>
+
+</header>
+
+
+
+<!-- APPOINTMENTS LIST -->
+
+<div class="container" id="content"></div>
+
+
+
+<!-- ================= MODAL ================= -->
+
+<div class="modal" id="modal" onclick="outsideClose(event)">
+
+<div class="modal-box">
+
+<h3 style="color:#1976d2">Appointment Details</h3>
+
+<div id="details" style="margin-bottom:10px;"></div>
+
+
+
+<!-- ================= PRESCRIPTION ================= -->
+
+<div id="prescriptionSection">
+
+<h3 style="color:#1976d2;margin-top:10px;">Prescription</h3>
+
+
+<div class="toggle" style="justify-content:space-between">
+
+<div style="display:flex;align-items:center;gap:10px">
+
+<span>Tips Only</span>
+
+<label class="switch">
+<input type="checkbox" id="tipsToggle" onchange="toggleTipsOnly()">
+<span class="slider"></span>
+</label>
+
+</div>
+
+<button class="nav-btn outline" onclick="openDoctorChatCard()">Chat</button>
+
+</div>
+
+
+
+<div style="margin:8px 0 6px 0;font-weight:600;color:#444;">
+Disease: <span id="issueText"></span>
+</div>
+
+
+
+<!-- MEDICINE -->
+
+<input id="med" placeholder="Medicine Name">
+
+
+
+<!-- DOSAGE -->
+
+<input id="qty" placeholder="Dosage (example: 5mg – 1 tablet)">
+
+
+
+<!-- DURATION -->
+
+<select id="days" class="duration">
+
+<option value="">Select Duration</option>
+<option value="3">3 Days</option>
+<option value="5">5 Days</option>
+<option value="7">7 Days</option>
+
+</select>
+
+
+
+<!-- PRICE -->
+
+<input id="price" placeholder="Medicine Price (Auto Calculated)" readonly>
+
+
+
+<!-- AUTO MEDICINE SUGGESTIONS -->
+
+<div id="autoMedicineList" class="auto-list"></div>
+
+
+
+<!-- TIPS -->
+
+<textarea id="tips" placeholder="Tips / Instructions"></textarea>
+
+
+
+<!-- ================= CHAT CARD ================= -->
+
+<div id="doctorChatCard" class="chat-card">
+
+<div class="chat-header">
+<span>🤖 Doctor Assistant</span>
+<span class="chat-close" onclick="closeDoctorChat()">✖</span>
+</div>
+
+<div class="chat-body">
+
+<div class="chat-actions">
+<button onclick="startDiseaseEnquiry()">Disease Enquiry</button>
+<button onclick="requestOffline()">Request Offline Visit</button>
+</div>
+
+<div id="chatMessages" class="chat-messages"></div>
+
+<div class="chat-input-row">
+<input id="chatInput" placeholder="Type message to patient..." />
+<button onclick="sendDoctorMessage()">Send</button>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- ACTION BUTTONS -->
+
+<div class="btn-row">
+
+<button class="nav-btn" id="saveBtn" onclick="savePrescription()">
+Save Prescription
+</button>
+
+<button class="nav-btn outline" onclick="downloadDoctorPDF()">
+Download PDF
+</button>
+
+<button class="nav-btn outline" onclick="closeModal()">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- JS FILES -->
+
+<script src="diseaseMedicine.js"></script>
+<script src="doctor.js"></script>
+
+
+
+<script>
+
+function outsideClose(e){
+if(e.target.id==="modal"){
+closeModal();
+}
+}
+
+</script>
+
+</body>
+</html>
