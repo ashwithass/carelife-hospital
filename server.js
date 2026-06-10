@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 /* ================= MONGODB ================= */
-mongoose.connect("mongodb://127.0.0.1:27017/smart_hospital")
+mongoose.connect("mongodb+srv://ssashwithasoundarraj_db_user:A96hRf0aBPIexpwe@cluster0.qo27ybq.mongodb.net/smart_hospital?retryWrites=true&w=majority&appName=Cluster0")
 .then(()=>console.log("✅ MongoDB Connected"))
 .catch(err=>console.log(err));
 
